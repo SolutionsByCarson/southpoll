@@ -19,7 +19,11 @@ What Claude needs from Carson, in one place (details in each section):
 | 9 | A production **maintenance window** (30–45 min) and the go-ahead to push | S15 | — |
 | 10 | (added 2026-11-19) The production **`wp-content/uploads/2026/10` and `2026/11` folders** on Local — Local → Connect → Pull → Production → *files only*, or a copy via SFTP: 108 listing photos uploaded since October exist in the database but not as files here, so their listings would lose them on push | S13 | Claude re-adopts them with `migrate-listings.php` media step |
 
-Status 2026-11-19: items 1, 2, 3 done (pull landed, CSVs current, accounts created). Code review done (`temp/10-code-review.md`).
+Status 2026-11-19: items 1, 2, 3, 4 (SendGrid key on Local, test mail sent), 5 (restricted `rk_live` key on Local, verified;
+webhook endpoint already exists on the Stripe account — only its signing secret is still to paste), 6 (Geocoding enabled, key
+re-entered, 876 farms geocoded) and 10 (uploads pulled, 108 photos re-adopted) done. Open: webhook signing secret on Local,
+reCAPTCHA type (7), recipients (8), window (9). Code review done (`temp/10-code-review.md`). Repo:
+`https://github.com/SolutionsByCarson/southpoll.git` holds the plugin + docs.
 `.wpe-push-ignore` keeps `temp/`, `.claude/`, `*.csv`, `local-xdebuginfo.php` and the log folders off production; after the
 push, `https://southpoll.com/temp/` and `https://southpoll.com/temp/00-README.md` must both answer 404 (S15 step 5).
 

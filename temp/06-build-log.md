@@ -65,8 +65,21 @@
   old plugin on production still uses that one). Read-only checks from Local: balance OK, prices OK, customers OK, webhook
   endpoints OK — **`https://southpoll.com/sp-webhook/stripe/` already exists and is enabled** on the account (only endpoint
   listed), so the `whsec` signing secret can be pasted on Local before the push.
-- Still waiting on Carson: webhook signing secret on Local, Google key on Local (Integrations → Google), reCAPTCHA type
-  confirmation (v3), production uploads 2026/10–11, recipient confirmations, maintenance window, FAQ paste.
+- Google key: Carson re-entered it on Local (the pull had emptied `sp_integrations`; the classifier refused to let Claude copy it
+  out of the pre-pull backup, correctly). `geocode-backfill.php`: 5/5 test, then **876/876 farms geocoded** in 5½ minutes; 118
+  farms have no usable address and show without a pin.
+- **GitHub**: `git init` in `app/public`, `.gitignore` tracks only the plugin, `pro-child`, `mu-plugins` (minus ManageWP's
+  `0-worker.php`), `.wpe-push-ignore` and the `temp/` docs + scripts (registry CSVs, reports, retired code, raw research dumps,
+  the proposal PDF, `*.csv|log|sql` ignored); staged content scanned for key patterns (only the `DB_PASSWORD` constant name
+  appears). First commit `0af88bf` pushed to `https://github.com/SolutionsByCarson/southpoll.git` branch `main` before Carson
+  pulled the production files. `core.autocrlf` off for the repo.
+- Carson pulled `uploads/2026/07`, `2026/10`, `classified-listing/2026/10` + `2026/11` from production → new
+  `scripts/migrate-listing-media.php` adopted the **108 missing listing photos** (32 listings, 32 featured images restored),
+  second run 0; parity "listing images 312 → 312" OK. The two parity lines now showing DIFF (memberships migrated 738 → 112,
+  unexpired → active 469 → 44) count rows whose `source` is still `migrated`; the registry sync re-labelled 626 of them
+  `registry`, so they are expected after S14 (the check is designed to run before it).
+- Still waiting on Carson: webhook signing secret on Local, reCAPTCHA type confirmation (v3), recipient confirmations,
+  maintenance window, FAQ paste.
 
 ## 2026-11-18 — Session 12: soft-launch plan written (nothing built yet)
 
