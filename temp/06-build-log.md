@@ -78,8 +78,14 @@
   second run 0; parity "listing images 312 → 312" OK. The two parity lines now showing DIFF (memberships migrated 738 → 112,
   unexpired → active 469 → 44) count rows whose `source` is still `migrated`; the registry sync re-labelled 626 of them
   `registry`, so they are expected after S14 (the check is designed to run before it).
-- Still waiting on Carson: webhook signing secret on Local, reCAPTCHA type confirmation (v3), recipient confirmations,
-  maintenance window, FAQ paste.
+- **Pre-push state (2026-11-19, production down for the window):** Carson entered the webhook signing secret
+  (`stripe.webhook_secret`, 38 chars — one field for both modes), v3 reCAPTCHA keys (captcha switched **on**), recipients kept
+  (feedback carson@, digest registry@). Suites auth 34 / render 40 / payments 40 / listings 121 green; then
+  `seed-sample-listings.php --delete` + `test-cleanup.php --yes` → 0 `@example.test` users, 0 test farms, 0 sample listings,
+  0 feedback rows. Final Local figures to push: 1,196 users, 999 farms, 930 active memberships, 876 geocoded. Settings carried
+  by the DB: notice / popup / feedback / digest daily / legacy redirects / captcha / verification all ON; Stripe live
+  (pk_live + rk_live + whsec); Google keys; WP Mail SMTP → SendGrid. Excluded from the push by `.wpe-push-ignore`: temp/,
+  .claude/, CSVs, logs, the Local mail guard. Carson pushes Local → production (files incl. uploads + database).
 
 ## 2026-11-18 — Session 12: soft-launch plan written (nothing built yet)
 
