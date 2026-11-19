@@ -1,0 +1,18 @@
+/*
+
+Theme Name: Pro &ndash; Child Theme
+Theme URI: http://theme.co/pro/
+Author: Themeco
+Author URI: http://theme.co/
+Description: Make all of your modifications to Pro in this child theme.
+Version: 2.0.0
+Template: pro
+
+*/
+
+/* 2026-10-27 cutover: the Classified Listing (.rtcl / .store-*) rules were removed with the plugin.
+   The member area, directory and classifieds ship their own stylesheets (SouthPoll Membership). */
+
+body.role-subscriber #wpadminbar {
+    display: none !important;
+}

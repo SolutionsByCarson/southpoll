@@ -1,0 +1,48 @@
+/* SouthPoll Membership — standalone member dashboard layout */
+
+body.sp-dashboard { margin: 0; background: var(--sp-bg-alt); font-family: var(--sp-font-body); color: var(--sp-body); min-height: 100vh; }
+body.sp-dashboard #wpadminbar { display: none; }
+body.sp-dashboard.admin-bar { margin-top: 0 !important; }
+body.sp-dashboard html { margin-top: 0 !important; }
+
+.sp-dash { display: block; min-height: 100vh; }
+/* Fixed sidebar (the admin bar is hidden on the dashboard): immune to theme overflow rules that defeat position: sticky; the main column makes room for it. */
+.sp-dash__sidebar { background: #fff; border-right: 1px solid var(--sp-border); display: flex; flex-direction: column; position: fixed; left: 0; top: 0; width: 260px; height: 100vh; overflow-y: auto; z-index: 20; }
+.sp-dash__brand { padding: 22px 20px 16px; border-bottom: 1px solid var(--sp-border-light); }
+.sp-dash__logo img { display: block; width: 100%; max-width: 220px; height: auto; }
+.sp-dash__back { display: inline-block; margin-top: 12px; font-size: .78rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: var(--sp-muted); }
+.sp-dash__back:hover { color: var(--sp-maroon); }
+.sp-dash__nav { padding: 12px 0; flex: 1; }
+.sp-dash__nav ul { list-style: none; margin: 0; padding: 0; }
+.sp-dash__link { display: flex; align-items: center; gap: 12px; padding: 11px 20px; color: var(--sp-ink); font-weight: 600; font-size: .9rem; border-left: 4px solid transparent; transition: background var(--sp-transition), color var(--sp-transition), border-color var(--sp-transition); }
+.sp-dash__link .sp-icon { color: var(--sp-muted); flex: none; }
+.sp-dash__link:hover { background: var(--sp-maroon-soft); color: var(--sp-maroon); }
+.sp-dash__link:hover .sp-icon { color: var(--sp-gold); }
+.sp-dash__link.is-active { background: var(--sp-maroon-tint); color: var(--sp-maroon); border-left-color: var(--sp-maroon); }
+.sp-dash__link.is-active .sp-icon { color: var(--sp-maroon); }
+.sp-dash__sidebar-foot { padding: 16px 20px; border-top: 1px solid var(--sp-border-light); }
+
+.sp-dash__main { display: flex; flex-direction: column; min-width: 0; min-height: 100vh; margin-left: 260px; }
+.sp-dash__topbar { display: flex; align-items: center; gap: 16px; padding: 14px 28px; background: #fff; border-bottom: 1px solid var(--sp-border); position: sticky; top: 0; z-index: 20; }
+.sp-dash__title { font-family: var(--sp-font-heading); font-weight: 600; font-size: 1.5rem; letter-spacing: var(--sp-heading-tracking); text-transform: uppercase; color: var(--sp-ink); margin: 0; flex: 1; }
+.sp-dash__user { display: flex; flex-direction: column; align-items: flex-end; line-height: 1.3; }
+.sp-dash__user-name { font-weight: 700; color: var(--sp-ink); font-size: .9rem; }
+.sp-dash__user-email { font-size: .78rem; color: var(--sp-muted); }
+.sp-dash__menu-btn { display: none; flex-direction: column; justify-content: center; gap: 4px; width: 40px; height: 40px; border: 1px solid var(--sp-border); background: #fff; border-radius: var(--sp-radius-sm); cursor: pointer; padding: 8px; }
+.sp-dash__menu-btn span { display: block; height: 2px; background: var(--sp-ink); border-radius: 2px; }
+.sp-dash__content { padding: 28px; flex: 1; }
+.sp-dash__footer { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; padding: 16px 28px; font-size: .78rem; color: var(--sp-muted); border-top: 1px solid var(--sp-border-light); }
+.sp-dash__overlay { position: fixed; inset: 0; background: rgba(0,0,0,.45); z-index: 29; }
+
+@media (max-width: 979px) {
+	.sp-dash__main { margin-left: 0; }
+	.sp-dash__sidebar { width: 280px; max-width: 85vw; z-index: 30; transform: translateX(-100%); transition: transform 220ms ease; box-shadow: var(--sp-shadow); }
+	.sp-dash--nav-open .sp-dash__sidebar { transform: none; }
+	.sp-dash__menu-btn { display: flex; }
+	.sp-dash__topbar { padding: 12px 16px; }
+	.sp-dash__title { font-size: 1.2rem; }
+	.sp-dash__user-email { display: none; }
+	.sp-dash__content { padding: 16px; }
+	.sp-dash__footer { padding: 14px 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .sp-dash__sidebar { transition: none; } }

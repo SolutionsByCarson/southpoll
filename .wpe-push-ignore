@@ -1,0 +1,7 @@
+# Never push these to WP Engine (Local → Connect → Push). gitignore syntax.
+temp/
+.claude/
+*.csv
+local-xdebuginfo.php
+wp-content/uploads/sp-logs*/
+wp-content/mu-plugins/zz-local-mail-guard.php

@@ -1,0 +1,52 @@
+/* SouthPoll Membership — design tokens (source: temp/branding/brand-style-guide.md) */
+:root {
+	--sp-maroon: #8d183c;
+	--sp-maroon-dark: #781433;
+	--sp-maroon-tint: rgba(141, 24, 60, .08);
+	--sp-maroon-soft: rgba(141, 24, 60, .04);
+	--sp-gold: #b2892e;            /* accents and washes; as a text surface pair with --sp-on-gold (4.63:1) */
+	--sp-gold-dark: #96731f;
+	--sp-gold-deep: #8a6a1c;       /* gold as TEXT on white (5.05:1) and the gold BUTTON/badge background with white text (5.05:1) */
+	--sp-gold-wash: rgba(178, 137, 46, .15);
+	--sp-on-gold: #272727;         /* text colour on gold surfaces */
+	--sp-ink: #272727;
+	--sp-body: #5a5a5a;
+	--sp-muted: #6f6f6f;           /* smallest text colour allowed on white/bg-alt (5.02:1 / 4.69:1) */
+	--sp-muted-light: #8a8a8a;     /* non-text UI only (3.45:1), never for text */
+	--sp-border: #dddddd;          /* decorative dividers */
+	--sp-border-strong: #8a8a8a;   /* form control boundaries (3:1 non-text contrast) */
+	--sp-border-light: #eeeeee;
+	--sp-light-on: #1e8e3e;        /* 4.21:1 vs white */
+	--sp-light-off: #c62828;       /* 5.62:1 vs white */
+	--sp-bg: #ffffff;
+	--sp-bg-alt: #f7f7f7;
+	--sp-sky: #e3f0fc;
+	--sp-success: #2e7d32;
+	--sp-success-bg: #f3fbf6;
+	--sp-warning: #b2892e;
+	--sp-warning-bg: #fffbf5;
+	--sp-danger: #a71000;
+	--sp-danger-bg: #fff6f7;
+	--sp-info: #1f5f8b;
+	--sp-info-bg: #f2f9fe;
+
+	--sp-font-heading: "Oswald", "Arial Narrow", sans-serif;
+	--sp-font-body: "Montserrat", Arial, sans-serif;
+	--sp-heading-weight: 600;
+	--sp-heading-tracking: -.025em;
+	--sp-label-tracking: .06em;
+
+	--sp-radius: 0;
+	--sp-radius-sm: 4px;
+	--sp-radius-pill: 999px;
+	--sp-shadow: 0 3px 25px 0 rgba(0, 0, 0, .15);
+	--sp-shadow-sm: 0 1px 4px rgba(0, 0, 0, .08);
+
+	--sp-max-width: 1200px;
+	--sp-site-width: 88%;
+	--sp-gap: 20px;
+	--sp-focus: 0 0 0 2px #ffffff, 0 0 0 4px var(--sp-maroon); /* solid ring, 9:1 vs white */
+	--sp-transition: 160ms ease;
+	--sp-z-modal: 10000;
+	--sp-z-toast: 10001;
+}

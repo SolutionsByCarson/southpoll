@@ -1,0 +1,30 @@
+# Track only what this project builds; WordPress core, third-party plugins/themes and uploads stay out.
+/*
+!/.gitignore
+!/.wpe-push-ignore
+!/wp-content/
+/wp-content/*
+!/wp-content/plugins/
+/wp-content/plugins/*
+!/wp-content/plugins/southpoll-membership/
+!/wp-content/themes/
+/wp-content/themes/*
+!/wp-content/themes/pro-child/
+!/wp-content/mu-plugins/
+!/temp/
+# Member data, generated reports and retired code never go to GitHub
+/temp/migration/registry/
+/temp/migration/reports/
+/temp/migration/retired/
+/temp/migration/redirect-map.csv
+/temp/research/db-*-raw.md
+/temp/research/rtcl-urls.csv
+/temp/*.pdf
+/temp/proposal_extracted.txt
+*.csv
+*.log
+*.sql
+*.sql.gz
+.DS_Store
+Thumbs.db
+/wp-content/mu-plugins/0-worker.php
