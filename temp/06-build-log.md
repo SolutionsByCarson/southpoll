@@ -1,5 +1,15 @@
 # Build Log (append-only, newest first)
 
+## 2026-11-25 — Session 14 (opened): feedback round 1 — intake not yet available
+
+- Brief: run `/feedback-round` for round 1 from `temp/feedback/2026-11-25.csv` plus notes from Kathy / Paul / Nathan.
+  The folder held only `.gitkeep` and the notes were placeholders, so nothing could be triaged.
+- Opened `temp/11-feedback-round-1.md` with the CSV column list and three carry-overs pre-triaged: F1.1 visibility SQL grace
+  for auto-renewing farms (code-review finding 3 residual; proposed fix now, needs Carson's go), F1.2 orphan feedback
+  screenshots (next round), F1.3 production 301 `/website-faq/` → `/members/help/` (Carson, 301 Redirects plugin).
+- No code changed, no suites run. Next: Carson exports SouthPoll → Feedback into `temp/feedback/2026-11-25.csv` (or pastes
+  the items + the staff notes); Claude completes the triage, Carson confirms decisions, build, `/wpe-rollout`.
+
 ## 2026-11-25 — Session 13 close-out: one week into the soft launch; handover context written
 
 - Production (southpoll.com) has been live since the 2026-11-19 push; no production work happened in between. Carson deleted
