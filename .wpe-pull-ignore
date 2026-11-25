@@ -1,0 +1,11 @@
+# Never let a production FILES pull overwrite the dev-only or Local-authored parts of this site (Local → Connect → Pull).
+temp/
+.claude/
+CLAUDE.md
+.gitignore
+.git/
+.wpe-push-ignore
+.wpe-pull-ignore
+wp-content/plugins/southpoll-membership/
+wp-content/themes/pro-child/
+wp-content/mu-plugins/zz-local-mail-guard.php

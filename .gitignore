@@ -35,3 +35,4 @@ Thumbs.db
 !/.claude/skills/
 /temp/feedback/*
 !/temp/feedback/.gitkeep
+!/.wpe-pull-ignore
