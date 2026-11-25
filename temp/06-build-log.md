@@ -23,6 +23,12 @@
   the current term (render suite +1). No login-notice / popup change.
 - Regression: lint clean; auth 34 / render 41 / payments 50 / cron 29 / farms 97 / listings 123 / admin 160. The farms suite
   needed two environment fixes (Local has a real geocoding key and no un-geocoded farm with an address since 2026-11-19).
+- **Release 0.3.1 verified on production (read-only HTTPS, 2026-11-25 ~20:45 UTC, after Carson's files-only push + cache
+  clear)**: `/` 200; `/members/login/` 200 with `sp-launch-notice` + `sp-feedback-fab`; `/classifieds/` 200;
+  `/classifieds/cows/` 200; a live listing 200; a farm page 200; `/members/` (directory) 200; `/listing-category/heifers/`
+  → 301 `/classifieds/heifers/`; `/my-account/` → 301 `/members/dashboard/`; `/temp/` and `/temp/00-README.md` 404;
+  `/wp-json/sp/v1/ping` → `{"ok":true,"version":"0.3.1"}`; every plugin asset carries `?ver=0.3.1`; no PHP warning in any
+  fetched page. The 0.5.1 data step ran on the first request (ping answered 0.3.1); Carson confirms farm 253 in wp-admin.
 - Release: `/wpe-rollout` handoff in the session report — files-only push, cache clear, then Claude verifies over HTTPS and
   Carson checks farm 253 + the single Stripe charge. Kathy should be told her term now ends 2028-10-13 and that the second
   receipt was not a second charge.
