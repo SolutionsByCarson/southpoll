@@ -26,7 +26,7 @@ final class ListingEditor {
 		$data   = [];
 
 		$title = trim( sanitize_text_field( (string) ( $in['title'] ?? '' ) ) );
-		if ( mb_strlen( $title ) < 3 ) {
+		if ( mb_strlen( $title ) < 3 || 0 === strcasecmp( $title, __( 'Untitled listing', 'southpoll-membership' ) ) ) { // the placeholder title of a new draft counts as empty (feedback round 1, F1.3)
 			$errors->add( 'title', __( 'Please give the listing a title (at least 3 characters).', 'southpoll-membership' ) );
 		} elseif ( mb_strlen( $title ) > 190 ) {
 			$errors->add( 'title', __( 'Keep the title under 190 characters.', 'southpoll-membership' ) );

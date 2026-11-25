@@ -116,6 +116,7 @@ final class PaymentRepository {
 			'failed'    => __( 'Failed', 'southpoll-membership' ),
 			'refunded'  => __( 'Refunded', 'southpoll-membership' ),
 			'rejected'  => __( 'Rejected', 'southpoll-membership' ),
+			'void'      => __( 'Void', 'southpoll-membership' ),
 			default     => ucfirst( $status ),
 		};
 	}

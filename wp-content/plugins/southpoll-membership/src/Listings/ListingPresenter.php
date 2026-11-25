@@ -57,6 +57,7 @@ final class ListingPresenter {
 			$out[]     = [
 				'id'             => $l->id,
 				'title'          => $l->title,
+				'untitled'       => $l->is_untitled(),
 				'slug'           => $l->slug,
 				'url'            => $this->urls->listing( $l->slug ),
 				'edit_url'       => $this->urls->edit_listing( $l->id ),

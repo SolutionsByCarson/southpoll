@@ -68,7 +68,7 @@ $sp_cfg = $payload + [ 'statuses' => $statuses, 'editBase' => $urls->edit_listin
 							<td>
 								<div class="sp-table__listing">
 									<a class="sp-table__thumb" :href="l.edit_url"><template x-if="l.image"><img :src="l.image" alt=""></template></a>
-									<div><a class="sp-table__title" :href="l.edit_url" x-text="l.title || '<?php echo esc_js( __( '(untitled draft)', 'southpoll-membership' ) ); ?>'"></a><div class="sp-text-muted sp-text-small" x-text="l.categories.map(c => c.name).join(', ')"></div></div>
+									<div><a class="sp-table__title" :href="l.edit_url" x-text="(l.untitled || !l.title) ? '<?php echo esc_js( __( '(untitled draft)', 'southpoll-membership' ) ); ?>' : l.title"></a><div class="sp-text-muted sp-text-small" x-text="l.categories.map(c => c.name).join(', ')"></div></div>
 								</div>
 							</td>
 							<td>

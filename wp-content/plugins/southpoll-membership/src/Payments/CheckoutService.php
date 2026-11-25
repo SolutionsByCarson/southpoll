@@ -194,6 +194,10 @@ final class CheckoutService {
 		$charge      = is_array( $intent ) && is_array( $intent['latest_charge'] ?? null ) ? $intent['latest_charge'] : null;
 		$invoice     = is_array( $sub ) && is_array( $sub['latest_invoice'] ?? null ) ? $sub['latest_invoice'] : null;
 		$invoice_id  = $invoice ? (string) $invoice['id'] : ( is_array( $sub ) ? (string) ( $sub['latest_invoice'] ?? '' ) : '' );
+		if ( '' === $invoice_id && ! empty( $session['invoice'] ) ) {
+			// One-time sessions are created with invoice_creation on: Stripe sends invoice.paid for this id too (round 1, F1.1).
+			$invoice_id = is_array( $session['invoice'] ) ? (string) ( $session['invoice']['id'] ?? '' ) : (string) $session['invoice'];
+		}
 		$amount      = (int) ( $session['amount_total'] ?? 0 );
 		$recurring   = (int) $payment->recurring === 1 || '' !== $sub_id;
 		$now         = Dates::now();
@@ -277,7 +281,13 @@ final class CheckoutService {
 		return 'failed';
 	}
 
-	/** Recurring renewal (billing_reason subscription_cycle). First invoices are handled by checkout completion. */
+	/**
+	 * invoice.paid: only a recurring cycle (billing_reason subscription_cycle on a known subscription) extends the term.
+	 * The invoice Stripe generates for a Checkout Session — a subscription's first invoice (subscription_create) or the
+	 * invoice_creation invoice of a one-time session (manual) — belongs to the payment fulfil_session() already handled:
+	 * it only gets its invoice id attached. (Round 1, F1.1: manual invoices used to run the renewal path — second payment
+	 * row, second year, auto-renew switched on without a subscription.)
+	 */
 	private function on_invoice_paid( array $invoice ): string {
 		$invoice_id = (string) ( $invoice['id'] ?? '' );
 		if ( '' !== $invoice_id && $this->payments->find_by_invoice( $invoice_id ) ) {
@@ -285,6 +295,15 @@ final class CheckoutService {
 		}
 		$sub_id = (string) ( $invoice['subscription'] ?? ( $invoice['parent']['subscription_details']['subscription'] ?? '' ) );
 		$reason = (string) ( $invoice['billing_reason'] ?? '' );
+		$intent = (string) ( is_array( $invoice['payment_intent'] ?? null ) ? ( $invoice['payment_intent']['id'] ?? '' ) : ( $invoice['payment_intent'] ?? '' ) );
+		$owned  = '' !== $intent ? $this->payments->find_by_intent( $intent ) : null;
+		if ( $owned ) {
+			// The intent already belongs to a payment row: this is the Checkout Session's own invoice, not a renewal.
+			if ( '' !== $invoice_id && '' === (string) $owned->stripe_invoice_id ) {
+				$this->payments->update( (int) $owned->id, [ 'stripe_invoice_id' => $invoice_id ] );
+			}
+			return 'already';
+		}
 		if ( 'subscription_create' === $reason ) {
 			// Covered by checkout.session.completed; just attach the invoice id if the payment lacks one.
 			$m = '' !== $sub_id ? $this->memberships->find_by_stripe_subscription( $sub_id ) : null;
@@ -297,6 +316,10 @@ final class CheckoutService {
 				}
 			}
 			return 'first_invoice';
+		}
+		if ( 'subscription_cycle' !== $reason || '' === $sub_id ) {
+			$this->logger->info( "invoice.paid ignored: billing_reason '{$reason}' is not a renewal cycle", [ 'invoice' => $invoice_id, 'subscription' => $sub_id ] );
+			return 'not_a_renewal';
 		}
 		$membership = '' !== $sub_id ? $this->memberships->find_by_stripe_subscription( $sub_id ) : null;
 		if ( ! $membership && ! empty( $invoice['customer'] ) ) {

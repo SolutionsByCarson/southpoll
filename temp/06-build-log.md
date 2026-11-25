@@ -1,14 +1,29 @@
 # Build Log (append-only, newest first)
 
-## 2026-11-25 — Session 14 (opened): feedback round 1 — intake not yet available
+## 2026-11-25 — Session 14: feedback round 1 triaged and built on Local (plugin 0.3.1, schema 0.5.1); ready for the files push
 
-- Brief: run `/feedback-round` for round 1 from `temp/feedback/2026-11-25.csv` plus notes from Kathy / Paul / Nathan.
-  The folder held only `.gitkeep` and the notes were placeholders, so nothing could be triaged.
-- Opened `temp/11-feedback-round-1.md` with the CSV column list and three carry-overs pre-triaged: F1.1 visibility SQL grace
-  for auto-renewing farms (code-review finding 3 residual; proposed fix now, needs Carson's go), F1.2 orphan feedback
-  screenshots (next round), F1.3 production 301 `/website-faq/` → `/members/help/` (Carson, 301 Redirects plugin).
-- No code changed, no suites run. Next: Carson exports SouthPoll → Feedback into `temp/feedback/2026-11-25.csv` (or pastes
-  the items + the staff notes); Claude completes the triage, Carson confirms decisions, build, `/wpe-rollout`.
+- Intake: `temp/feedback/2026-11-25.csv` (5 rows, Kathy ×4 + Nathan ×1; no notes outside the button). Triage + decisions in
+  `temp/11-feedback-round-1.md`; todo section "Feedback round 1" updated.
+- **F1.1 blocker (Kathy's $100 test payment, 2026-11-20)**: one checkout produced two paid rows and two +365-day extensions
+  (term to 2029-10-13, auto-renew on with no subscription). Cause: a one-time Checkout Session is created with
+  `invoice_creation`, so Stripe also sends `invoice.paid` (billing reason `manual`); `on_invoice_paid` only exempted
+  `subscription_create`, matched the membership by customer id and ran the recurring-renewal path. One real charge.
+  - R1.1 `CheckoutService`: intent-match de-dupe, `not_a_renewal` for anything but `subscription_cycle` + subscription id,
+    invoice id stored on payment-mode sessions. Payments suite §5b (the checks reproduced the bug before the fix).
+  - R1.2 `Migrator::repair_phantom_renewals()` as data step 0.5.1 (`SP_DB_VERSION` 0.5.1, `SP_VERSION` 0.3.1): voids the
+    phantom rows (new status `void`), restores `ends_at` to the row's `term_start`, clears auto-renew when there is no
+    subscription, notes both rows. Suite §5c + a Local rehearsal on Kathy's farm 253 (backup
+    `20261125-191729-before-round1-kathy-rehearsal.sql.gz`): term back to 2028-10-13, auto-renew off, idempotent.
+- **F1.3 high (Nathan)**: a new draft's placeholder title "Untitled listing" pre-filled the Ad-title box, so Publish passed
+  the 3-character rule. R1.3: `Listing::is_untitled()`, editor refuses the placeholder, empty box on untitled drafts,
+  "(untitled draft)" in My Listings. Listings suite §2 +2.
+- Carry-overs: R1.4 visibility-SQL auto-renew grace and R1.5 orphan screenshots → round 2; R1.6 production 301
+  `/website-faq/` → `/members/help/` → Carson (301 Redirects plugin).
+- Regression: lint clean; auth 34 / render 40 / payments 50 / cron 29 / farms 97 / listings 123 / admin 160. The farms suite
+  needed two environment fixes (Local has a real geocoding key and no un-geocoded farm with an address since 2026-11-19).
+- Release: `/wpe-rollout` handoff in the session report — files-only push, cache clear, then Claude verifies over HTTPS and
+  Carson checks farm 253 + the single Stripe charge. Kathy should be told her term now ends 2028-10-13 and that the second
+  receipt was not a second charge.
 
 ## 2026-11-25 — Session 13 close-out: one week into the soft launch; handover context written
 

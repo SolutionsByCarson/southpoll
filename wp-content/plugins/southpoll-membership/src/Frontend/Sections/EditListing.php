@@ -136,7 +136,7 @@ final class EditListing implements Section {
 			exit;
 		}
 		$values = [
-			'title'       => (string) ( $this->submitted['title'] ?? $listing->title ),
+			'title'       => (string) ( $this->submitted['title'] ?? ( $listing->is_untitled() ? '' : $listing->title ) ), // the placeholder title shows as an empty box (feedback round 1, F1.3)
 			'excerpt'     => (string) ( $this->submitted['excerpt'] ?? $listing->excerpt ),
 			'content'     => (string) ( $this->submitted['content'] ?? $listing->content ),
 			'price'       => isset( $this->submitted['price'] ) ? (string) $this->submitted['price'] : ( null !== $listing->price_cents ? number_format( $listing->price_cents / 100, 2, '.', '' ) : '' ),

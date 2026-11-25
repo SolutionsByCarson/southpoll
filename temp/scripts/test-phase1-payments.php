@@ -58,7 +58,7 @@ $wpdb->query( "DELETE FROM {$wpdb->prefix}sp_stripe_events WHERE event_id LIKE '
 $wpdb->query( $wpdb->prepare( "DELETE FROM {$wpdb->prefix}sp_payments WHERE farm_id = %d", $farm_id ) );
 // Fake Stripe ids are global; scrub them from any farm an earlier run touched so lookups resolve to THIS farm.
 $wpdb->query( "UPDATE {$wpdb->prefix}sp_memberships SET stripe_customer_id = '', stripe_subscription_id = '', auto_renew = 0 WHERE stripe_customer_id = 'cus_TEST1' OR stripe_subscription_id = 'sub_TEST1'" );
-$wpdb->query( "DELETE FROM {$wpdb->prefix}sp_payments WHERE stripe_checkout_session_id LIKE 'cs\\_test\\_%' OR stripe_subscription_id = 'sub_TEST1' OR stripe_invoice_id IN ('in_FIRST','in_FIRST2','in_CYCLE1','in_FAIL') OR stripe_payment_intent_id IN ('pi_TEST1','pi_CYCLE1')" );
+$wpdb->query( "DELETE FROM {$wpdb->prefix}sp_payments WHERE stripe_checkout_session_id LIKE 'cs\\_test\\_%' OR stripe_subscription_id = 'sub_TEST1' OR stripe_invoice_id IN ('in_FIRST','in_FIRST2','in_CYCLE1','in_FAIL','in_ONE_TIME','in_ONE_TIME_2','in_CYCLE_NOSUB','in_PHANTOM') OR stripe_payment_intent_id IN ('pi_TEST1','pi_CYCLE1','pi_UNKNOWN','pi_NOSUB','pi_PHANTOM')" );
 $mrepo->update( (int) $mrepo->ensure( $farm_id )->id, [ 'status' => 'none', 'starts_at' => null, 'ends_at' => null, 'auto_renew' => 0, 'stripe_customer_id' => '', 'stripe_subscription_id' => '', 'reminders_sent' => [], 'expired_at' => null ] );
 $ctx = $ctxs->for_user( $owner_id );
 
@@ -159,6 +159,37 @@ $check( 'term extended by 365 from previous end', $m->ends_at === Dates::add_day
 $check( 'payment row with invoice id + recurring flag', (bool) $prepo->find_by_invoice( 'in_CYCLE1' ) && 1 === (int) $prepo->find_by_invoice( 'in_CYCLE1' )->recurring );
 $check( 'duplicate invoice ignored', 'already' === $checkout->handle_event( $inv ) );
 $check( 'first-invoice event does not double-extend', 'first_invoice' === $checkout->handle_event( [ 'type' => 'invoice.paid', 'data' => [ 'object' => [ 'id' => 'in_FIRST2', 'subscription' => 'sub_TEST1', 'billing_reason' => 'subscription_create' ] ] ] ) && $mrepo->for_farm( $farm_id )->ends_at === $m->ends_at );
+
+echo "\n== 5b. Round 1 F1.1: a one-time checkout's own invoice is never a renewal ==\n";
+// Stripe sends invoice.paid (billing_reason "manual", no subscription) for the invoice_creation invoice of a payment-mode
+// session; before 0.3.1 it ran the renewal path (Kathy, 2026-11-20: second $100 row, second year, auto-renew on).
+$sent = []; $rows_before = count( $prepo->for_farm( $farm_id, 100 ) ); $end_before = $mrepo->for_farm( $farm_id )->ends_at;
+$manual = [ 'id' => 'evt_manual1', 'type' => 'invoice.paid', 'livemode' => false, 'data' => [ 'object' => [ 'id' => 'in_ONE_TIME', 'subscription' => null, 'customer' => 'cus_TEST1', 'billing_reason' => 'manual', 'amount_paid' => 10000, 'currency' => 'usd', 'payment_intent' => 'pi_TEST1', 'charge' => 'ch_TEST1' ] ] ];
+$r = $webhook->process( $manual, json_encode( $manual ) );
+$check( 'manual invoice whose intent is a known payment → already, invoice id attached', 'already' === $r && 'in_ONE_TIME' === (string) $prepo->find( (int) $pending->id )->stripe_invoice_id, $r );
+$manual2 = [ 'id' => 'evt_manual2', 'type' => 'invoice.paid', 'livemode' => false, 'data' => [ 'object' => [ 'id' => 'in_ONE_TIME_2', 'subscription' => null, 'customer' => 'cus_TEST1', 'billing_reason' => 'manual', 'amount_paid' => 10000, 'currency' => 'usd', 'payment_intent' => 'pi_UNKNOWN' ] ] ];
+$r = $webhook->process( $manual2, json_encode( $manual2 ) );
+$check( 'manual invoice with unknown intent → not_a_renewal (customer match no longer enough)', 'not_a_renewal' === $r, $r );
+$cycle_nosub = [ 'id' => 'evt_cycle_nosub', 'type' => 'invoice.paid', 'livemode' => false, 'data' => [ 'object' => [ 'id' => 'in_CYCLE_NOSUB', 'customer' => 'cus_TEST1', 'billing_reason' => 'subscription_cycle', 'amount_paid' => 10000, 'currency' => 'usd', 'payment_intent' => 'pi_NOSUB' ] ] ];
+$check( 'cycle without a subscription id → not_a_renewal', 'not_a_renewal' === $webhook->process( $cycle_nosub, json_encode( $cycle_nosub ) ) );
+$check( 'no new payment row, term unchanged, no e-mails', count( $prepo->for_farm( $farm_id, 100 ) ) === $rows_before && $mrepo->for_farm( $farm_id )->ends_at === $end_before && [] === $sent, implode( ',', $sent ) );
+$m = $mrepo->for_farm( $farm_id );
+$check( 'membership keeps its subscription + auto-renew', 'sub_TEST1' === $m->stripe_subscription_id && 1 === (int) $m->auto_renew );
+
+echo "\n== 5c. Round 1 R1.2: Migrator::repair_phantom_renewals() undoes the pre-0.3.1 damage ==\n";
+$keep    = [ 'ends_at' => $m->ends_at, 'status' => $m->status, 'auto_renew' => (int) $m->auto_renew, 'stripe_subscription_id' => $m->stripe_subscription_id, 'notes' => $m->notes ];
+$phantom = $prepo->create( [ 'membership_id' => (int) $m->id, 'farm_id' => $farm_id, 'user_id' => $owner_id, 'tier_id' => (int) $tier->id, 'amount_cents' => 10000, 'currency' => 'USD', 'method' => 'stripe', 'status' => 'succeeded', 'stripe_invoice_id' => 'in_PHANTOM', 'stripe_subscription_id' => '', 'stripe_payment_intent_id' => 'pi_PHANTOM', 'recurring' => 1, 'paid_at' => Dates::now(), 'term_start' => $m->ends_at, 'term_end' => Dates::add_days( $m->ends_at, 365 ), 'notes' => '[' . Dates::now() . '] Automatic renewal (invoice in_PHANTOM)' ] );
+$mrepo->update( (int) $m->id, [ 'ends_at' => Dates::add_days( $m->ends_at, 365 ), 'auto_renew' => 1, 'stripe_subscription_id' => '' ] );
+$migrator = $c->get( \SouthPoll\Membership\Core\Migrator::class );
+$n = $migrator->repair_phantom_renewals();
+$fixed = $mrepo->for_farm( $farm_id ); $void = $prepo->find( (int) $phantom->id );
+$check( 'one phantom row repaired', 1 === $n, (string) $n );
+$check( 'membership end date restored, auto-renew cleared, note added', $fixed->ends_at === $keep['ends_at'] && 0 === (int) $fixed->auto_renew && str_contains( (string) $fixed->notes, 'Phantom renewal from payment #' . $phantom->id ), "{$fixed->ends_at} auto={$fixed->auto_renew}" );
+$check( 'phantom payment voided with note; real renewal row untouched', 'void' === $void->status && str_contains( (string) $void->notes, 'Voided' ) && 'succeeded' === $prepo->find_by_invoice( 'in_CYCLE1' )->status );
+$check( 'second run changes nothing', 0 === $migrator->repair_phantom_renewals() );
+$check( 'status label "Void"', 'Void' === PaymentRepository::status_label( 'void' ) );
+$mrepo->update( (int) $m->id, $keep );
+$wpdb->delete( $wpdb->prefix . 'sp_payments', [ 'id' => (int) $phantom->id ] );
 
 echo "\n== 6. Payment failure + subscription lifecycle events ==\n";
 $sent = [];

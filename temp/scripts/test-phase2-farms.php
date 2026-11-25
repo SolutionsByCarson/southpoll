@@ -72,6 +72,7 @@ register_shutdown_function( function () use ( $settings, $integrations, $restore
 	$settings->set( 'inquiry_admin_copy', $restore['inquiry_admin_copy'] );
 	$integrations->set( 'google.geocoding_key', $restore['geocoding_key'] );
 } );
+$integrations->set( 'google.geocoding_key', '' ); // Local carries a real key since 2026-11-19; §3 expects to start without one (restored on shutdown)
 
 // Accounts + deterministic state: owner farm active for a year, buyer verified, other test farm active.
 $owner = (int) $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_email LIKE 'sp-owner-new-%@example.test' ORDER BY ID DESC LIMIT 1" );
@@ -179,8 +180,12 @@ $wpdb->update( "{$p}sp_farms", [ 'lat' => null, 'lng' => null, 'geocoded_at' => 
 $ok_geo = $geo->geocode_farm( $farms->find( $farm_id ) );
 $check( 'geocode_farm stores coordinates (status OK)', $ok_geo && 'OK' === $geo->last_status() && null !== $farms->find( $farm_id )->lat, $geo->last_status() );
 $geo->set_transport( fn( $url ) => [ 'response' => [ 'code' => 200 ], 'body' => wp_json_encode( [ 'status' => 'REQUEST_DENIED', 'error_message' => 'API not enabled', 'results' => [] ] ) ] );
+// Since the 2026-11-19 backfill every Local farm with an address has coordinates, so give backfill() a candidate: the test
+// farm again; its coordinates are put back afterwards for the directory / pin checks.
+$wpdb->update( "{$p}sp_farms", [ 'lat' => null, 'lng' => null, 'geocoded_at' => null ], [ 'id' => $farm_id ] );
 $bf = $geo->backfill( 1 );
 $check( 'backfill stops on a service error without stamping the farm', 'REQUEST_DENIED' === $bf['error'] && 0 === $bf['geocoded'] && ( 0 === $bf['attempted'] || null === $farms->missing_coordinates( 1 )[0]->geocoded_at ), json_encode( $bf ) );
+$wpdb->update( "{$p}sp_farms", [ 'lat' => 39.3639, 'lng' => -94.3622, 'geocoded_at' => current_time( 'mysql', true ) ], [ 'id' => $farm_id ] );
 $geo->set_transport( function () { return new WP_Error( 'boom', 'network down' ); } );
 $check( 'transport error → null, no exception', null === $geo->geocode( 'Kearney, MO' ) );
 $integrations->set( 'google.geocoding_key', '' );

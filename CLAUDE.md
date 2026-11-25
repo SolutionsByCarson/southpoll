@@ -20,7 +20,7 @@ needs the design or an open decision.
 - PHP is not on PATH: run scripts with `temp/scripts/wp-run.sh <script.php>` (Git Bash); plain-PHP tools use the Local
   binary path in `temp/scripts/README.md`. The site is Local by WP Engine; MySQL on port 10011.
 - Before calling a step done: `./wp-run.sh sp-plugin.php lint`, then the seven suites in order (auth → render → payments →
-  cron → phase2 → phase3 → phase4; counts as of 2026-11-19: 34 / 40 / 40 / 29 / 97 / 121 / 160), `contrast-check.php --shipped`
+  cron → phase2 → phase3 → phase4; counts as of 2026-11-25: 34 / 40 / 50 / 29 / 97 / 123 / 160), `contrast-check.php --shipped`
   after touching `sp-tokens.css`/`sp-ui.css`, `js-balance-check.php` after touching `assets/js`.
 - Verify protected screens in-process (the suites' `$render_section` / `rest_do_request`), never by forging cookies.
 - Every button WCAG AA; Alpine.js is bundled, no build step; keep `.sp-` class conventions and `sp-ui.css` tokens.
@@ -66,7 +66,8 @@ keeps a production pull from overwriting them on Local. After the push, `https:/
   Bump `launch_popup_version` to re-show the popup after a release.
 
 ## Current production state (2026-11-19 push; verify against the Status page before relying on it)
-- Plugin `SP_VERSION` 0.3.0, schema 0.5.0. 1,196 users, 999 farms (876 geocoded; 118 have no usable address), 930 active
+- Plugin `SP_VERSION` 0.3.0, schema 0.5.0 (0.3.1 / 0.5.1 once the feedback-round-1 files push built on 2026-11-25 lands; see
+  `temp/11-feedback-round-1.md`). 1,196 users, 999 farms (876 geocoded; 118 have no usable address), 930 active
   memberships (terms from the registry export, most end 2026-12-31), 93 migrated listings with all 312 photos.
 - ON: legacy 301s, login notice, dashboard popup (version `2026-11`), feedback button (→ carson@), registry digest daily 08:00
   Central skipping quiet days (→ registry@southpoll.com), reCAPTCHA v3, e-mail verification. Stripe live (restricted

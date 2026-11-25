@@ -149,6 +149,12 @@ final class Listing {
 		return 'draft' === $this->post_status && null === $this->published_at;
 	}
 
+	/** True when the title is empty or still the placeholder a new draft is created with (feedback round 1, F1.3). */
+	public function is_untitled(): bool {
+		$t = trim( $this->title );
+		return '' === $t || 0 === strcasecmp( $t, __( 'Untitled listing', 'southpoll-membership' ) );
+	}
+
 	/** Effective status for badges: expired beats stored status; a never-published draft is "draft", a paused one "inactive". */
 	public function effective_status(): string {
 		if ( ListingTypes::STATUS_EXPIRED === $this->post_status ) {

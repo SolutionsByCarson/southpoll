@@ -20,8 +20,8 @@ declare( strict_types=1 );
 
 defined( 'ABSPATH' ) || exit;
 
-define( 'SP_VERSION', '0.3.0' );
-define( 'SP_DB_VERSION', '0.5.0' ); // Bump whenever Core\Schema or Core\Migrator data steps change. 0.5.0 = sp_feedback (S8, 2026-11-18).
+define( 'SP_VERSION', '0.3.1' );
+define( 'SP_DB_VERSION', '0.5.1' ); // Bump whenever Core\Schema or Core\Migrator data steps change. 0.5.0 = sp_feedback (S8, 2026-11-18); 0.5.1 = phantom-renewal repair (feedback round 1, 2026-11-25).
 define( 'SP_PLUGIN_FILE', __FILE__ );
 define( 'SP_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'SP_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
