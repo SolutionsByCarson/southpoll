@@ -28,3 +28,10 @@
 .DS_Store
 Thumbs.db
 /wp-content/mu-plugins/0-worker.php
+# Project context + skills are tracked; the local permission file is not; exported feedback CSVs stay out
+!/CLAUDE.md
+!/.claude/
+/.claude/*
+!/.claude/skills/
+/temp/feedback/*
+!/temp/feedback/.gitkeep

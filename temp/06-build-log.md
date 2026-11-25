@@ -1,5 +1,19 @@
 # Build Log (append-only, newest first)
 
+## 2026-11-25 — Session 13 close-out: one week into the soft launch; handover context written
+
+- Production (southpoll.com) has been live since the 2026-11-19 push; no production work happened in between. Carson deleted
+  the old Website FAQ page on production (Help Center replaces it); announcement + newsletter copy delivered
+  (`temp/migration/10-launch-announcement.*`, `10-newsletter-block.html`, FAQ copy kept in `09-faq-copy.*`).
+- Handover: **`CLAUDE.md` at the web root** (reading order, standing rules, environments, the post-launch release path —
+  files-only pushes, data changes via `Migrator::data_steps()` + `SP_DB_VERSION`, Stripe → test mode after any DB pull —
+  the feedback-round loop, current production state and residuals) + two project skills: `.claude/skills/feedback-round`
+  (intake → `temp/11-feedback-round-<n>.md` → build → close) and `.claude/skills/wpe-rollout` (gate → Carson pushes files →
+  read-only verification → log). `.wpe-pull-ignore` now protects `temp/`, `.claude/`, `CLAUDE.md`, the repo files, the plugin,
+  the child theme and the mail guard from a production files pull; `.wpe-push-ignore` also excludes `CLAUDE.md` and `.git/`.
+  `temp/feedback/` created for exported feedback CSVs (git-ignored). Committed and pushed to GitHub.
+- Next session starts with `/feedback-round` once Carson exports SouthPoll → Feedback (or pastes the items).
+
 ## 2026-11-18 — Session 13: soft-launch Block A (S1–S10) built on Local; Block B walk-through + registry script
 
 - Carson's brief: work `08-soft-launch-plan.md` in order, Block A without stopping, then the Block B walk-through and the

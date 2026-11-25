@@ -124,7 +124,7 @@ plugin (Paul's listing #8048 exists there).
 
 - [ ] T6.1 Event capture (views, searches, contacts, favorites, shares, logins, signups, publishes, payments) + daily rollups.
 - [ ] T6.2 Analytics admin page: membership counts over time, new vs renewal, revenue, listing volume/frequency, active vs dormant, top farms/listings; CSV export.
-- [x] T6.3 `/members/help/` content (account setup, farm page, listings, payment, renewal, favorites, saved searches, managers) and the public FAQ page update. — Help Center built 2026-11-18 (S10); public FAQ copy written to `temp/migration/09-faq-copy.md`, **Carson pastes it into Cornerstone page #880** (open until then).
+- [x] T6.3 `/members/help/` content (account setup, farm page, listings, payment, renewal, favorites, saved searches, managers) and the public FAQ page update. — Help Center built 2026-11-18 (S10); public FAQ copy written to `temp/migration/09-faq-copy.md` / `.html`; **Carson deleted the Website FAQ page on production on 2026-11-19** instead (the Help Center replaces it). Follow-up for production: a 301 from `/website-faq/` to `/members/help/` in the 301 Redirects plugin, because 31 legacy redirect rows and old links still land there.
 - [ ] T6.4 Rollout plan + member announcement copy; staff training outline (45 min).
 - [ ] T6.5 QA sweep: mobile, accessibility, performance (REST timings, map clustering), security review (nonces, caps, SQL, uploads, rate limits), email deliverability check.
 - [ ] T6.6 Launch + post-launch monitoring (webhook health, cron health, error log) and warranty punch list.

@@ -5,3 +5,7 @@ temp/
 local-xdebuginfo.php
 wp-content/uploads/sp-logs*/
 wp-content/mu-plugins/zz-local-mail-guard.php
+CLAUDE.md
+.gitignore
+.git/
+temp/feedback/
