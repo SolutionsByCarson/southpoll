@@ -77,3 +77,7 @@ Severity: blocker / high / normal / low / idea. Decision: fix now / next round /
   the current term ends adds the year to the end of it; the receipt shows the dates covered (the D-27 rule that puzzled
   Kathy). Touchpoint: `templates/dashboard/help.php`; render suite +1 check. Login notice / popup unchanged, no popup version
   bump. Suites after: 34 / **41** / 50 / 29 / 97 / 123 / 160, lint clean. Ready for the files push.
+- 2026-11-25 — **Pushed and verified.** Carson pushed files only + cleared the cache; HTTPS checks all green (ping 0.3.1,
+  assets 0.3.1, 301s, 404s on `temp/`, listing / farm / directory pages clean). Round 1 closed on the build side. Open for
+  Carson: farm 253 check in wp-admin, Stripe single-charge check, e-mail to Kathy (`temp/feedback/2026-11-25-kathy-email.md`),
+  R1.6 301, "Untitled listing" sweep. Round 2 backlog: R1.4, R1.5.

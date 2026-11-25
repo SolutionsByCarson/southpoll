@@ -147,4 +147,4 @@ plugin (Paul's listing #8048 exists there).
 - [ ] R1.4 Visibility SQL honours the 3-day auto-renew grace (code-review finding 3 residual) — round 2.
 - [ ] R1.5 Purge orphan feedback screenshots — round 2.
 - [ ] R1.6 Production: 301 `/website-faq/` → `/members/help/` in the 301 Redirects plugin (Carson, no code).
-- [ ] Release 0.3.1: Carson pushes files (Local → Connect → Push → Production, files only), clears the WP Engine cache; Claude verifies over HTTPS; Carson checks farm 253 and the single Stripe charge, tells Kathy.
+- [x] Release 0.3.1 pushed and verified 2026-11-25 (files only). Remaining for Carson: farm 253 check, Stripe single-charge check, e-mail to Kathy. (Was:) Carson pushes files (Local → Connect → Push → Production, files only), clears the WP Engine cache; Claude verifies over HTTPS; Carson checks farm 253 and the single Stripe charge, tells Kathy.
