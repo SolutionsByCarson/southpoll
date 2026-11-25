@@ -73,3 +73,7 @@ Severity: blocker / high / normal / low / idea. Decision: fix now / next round /
 - Next: commit + push to GitHub, `/wpe-rollout` (files only). After the push Carson checks farm 253 in SouthPoll →
   Memberships (term to 2028-10-13, auto-renew off, second payment row Void) and confirms in Stripe that 2026-11-20 holds
   one $100 charge for customer `cus_S1MqirYprJon19`.
+- 2026-11-25 — **R1.7 (Carson's follow-up)**: Help Center "How do I pay online?" gained a second paragraph — paying before
+  the current term ends adds the year to the end of it; the receipt shows the dates covered (the D-27 rule that puzzled
+  Kathy). Touchpoint: `templates/dashboard/help.php`; render suite +1 check. Login notice / popup unchanged, no popup version
+  bump. Suites after: 34 / **41** / 50 / 29 / 97 / 123 / 160, lint clean. Ready for the files push.

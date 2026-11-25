@@ -188,6 +188,7 @@ $settings_r->update( $fb_keep );
 echo "\n== S10: Help Center ==\n";
 $h = $render_section( (int) $owner, 'help' );
 $check( 'owner: Help Center renders all eight sections with live values', str_contains( $h, 'id="help-account"' ) && str_contains( $h, 'id="help-contact"' ) && 8 === substr_count( $h, 'class="sp-card sp-help__section"' ) && str_contains( $h, 'runs for ' . (int) $settings_r->get( 'listing_duration_days', 60 ) . ' days' ) && str_contains( $h, (string) $settings_r->get( 'admin_contact.email' ) ) && str_contains( $h, 'sp-help-item' ) && ! str_contains( $h, 'Sample stat' ), strlen( $h ) . ' bytes' );
+$check( 'round 1: "pay online" answer explains that paying early extends the current term', str_contains( $h, 'paying early never costs you time' ) );
 $h = $render_section( (int) $buyer, 'help' );
 $check( 'buyer: Help Center renders with the buyer note', str_contains( $h, 'id="help-favorites"' ) && str_contains( $h, 'Buyer accounts can browse' ) );
 

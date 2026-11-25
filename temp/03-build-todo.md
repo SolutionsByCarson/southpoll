@@ -143,6 +143,7 @@ plugin (Paul's listing #8048 exists there).
 - [x] R1.1 Webhook: a one-time Checkout invoice (`invoice.paid`, billing reason `manual`) never runs the renewal path; intent-match de-dupe. — Built 2026-11-25 (payments suite §5b).
 - [x] R1.2 Data repair `Migrator::repair_phantom_renewals()` (schema 0.5.1, plugin 0.3.1): voids phantom renewal rows, restores the end date, clears auto-renew without a subscription. — Built + rehearsed on Kathy's farm 253 on Local 2026-11-25 (suite §5c).
 - [x] R1.3 Listings: placeholder title "Untitled listing" can no longer be published; empty title box on new drafts. — Built 2026-11-25 (listings suite §2).
+- [x] R1.7 Help Center: "pay online" answer explains that paying early extends the current term. — Built 2026-11-25 (render suite).
 - [ ] R1.4 Visibility SQL honours the 3-day auto-renew grace (code-review finding 3 residual) — round 2.
 - [ ] R1.5 Purge orphan feedback screenshots — round 2.
 - [ ] R1.6 Production: 301 `/website-faq/` → `/members/help/` in the 301 Redirects plugin (Carson, no code).

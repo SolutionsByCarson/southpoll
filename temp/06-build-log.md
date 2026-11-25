@@ -19,7 +19,9 @@
   "(untitled draft)" in My Listings. Listings suite §2 +2.
 - Carry-overs: R1.4 visibility-SQL auto-renew grace and R1.5 orphan screenshots → round 2; R1.6 production 301
   `/website-faq/` → `/members/help/` → Carson (301 Redirects plugin).
-- Regression: lint clean; auth 34 / render 40 / payments 50 / cron 29 / farms 97 / listings 123 / admin 160. The farms suite
+- R1.7 (Carson): Help Center "How do I pay online?" now says a payment made before the end date adds the year to the end of
+  the current term (render suite +1). No login-notice / popup change.
+- Regression: lint clean; auth 34 / render 41 / payments 50 / cron 29 / farms 97 / listings 123 / admin 160. The farms suite
   needed two environment fixes (Local has a real geocoding key and no un-geocoded farm with an address since 2026-11-19).
 - Release: `/wpe-rollout` handoff in the session report — files-only push, cache clear, then Claude verifies over HTTPS and
   Carson checks farm 253 + the single Stripe charge. Kathy should be told her term now ends 2028-10-13 and that the second

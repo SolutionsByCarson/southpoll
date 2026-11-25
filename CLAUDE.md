@@ -20,7 +20,7 @@ needs the design or an open decision.
 - PHP is not on PATH: run scripts with `temp/scripts/wp-run.sh <script.php>` (Git Bash); plain-PHP tools use the Local
   binary path in `temp/scripts/README.md`. The site is Local by WP Engine; MySQL on port 10011.
 - Before calling a step done: `./wp-run.sh sp-plugin.php lint`, then the seven suites in order (auth → render → payments →
-  cron → phase2 → phase3 → phase4; counts as of 2026-11-25: 34 / 40 / 50 / 29 / 97 / 123 / 160), `contrast-check.php --shipped`
+  cron → phase2 → phase3 → phase4; counts as of 2026-11-25: 34 / 41 / 50 / 29 / 97 / 123 / 160), `contrast-check.php --shipped`
   after touching `sp-tokens.css`/`sp-ui.css`, `js-balance-check.php` after touching `assets/js`.
 - Verify protected screens in-process (the suites' `$render_section` / `rest_do_request`), never by forging cookies.
 - Every button WCAG AA; Alpine.js is bundled, no build step; keep `.sp-` class conventions and `sp-ui.css` tokens.
